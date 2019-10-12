@@ -5,11 +5,20 @@ public class users {
     double longitude, latitue;
 
     public users(){
+        this.name = "";
+        this.phone = "";
+        this.latitue = 0.0;
+        this.longitude = 0.0;
     }
 
     public users(double longitude, double latitue) {
         this.longitude = longitude;
         this.latitue = latitue;
+    }
+
+    public users(String name, String phone) {
+        this.name = name;
+        this.phone = phone;
     }
 
     public users(String name, String phone, double longitude, double latitue) {

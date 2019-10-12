@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     public static FirebaseDatabase mFirebaseDatabase;
     public static DatabaseReference mDatabaseReference;
     public static String mUsername="0";
+    public static users usr;
 
     ConstraintLayout layout;
     TextView textView, textView1, textView2;
@@ -37,8 +38,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void helpClicked(View view){
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        startActivity(intent);
+        Toast.makeText(this, "Help", Toast.LENGTH_SHORT).show();
     }
 
     public void animate(){
@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         finish();*/
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
-            Toast.makeText(this, "no user found", Toast.LENGTH_SHORT).show();
 //            finish();
         }
         else {

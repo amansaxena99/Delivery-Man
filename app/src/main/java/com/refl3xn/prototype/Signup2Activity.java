@@ -19,11 +19,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.refl3xn.prototype.MainActivity.currentUser;
 import static com.refl3xn.prototype.MainActivity.mAuth;
+import static com.refl3xn.prototype.MainActivity.mDatabaseReference;
+import static com.refl3xn.prototype.MainActivity.usr;
 
 public class Signup2Activity extends AppCompatActivity {
 
@@ -73,12 +79,15 @@ public class Signup2Activity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Intent intent = new Intent(Signup2Activity.this, ProfileActivity.class);
-                            intent.putExtra("name", name);
-                            intent.putExtra("phone", number);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            finish();
+                                Intent intent = new Intent(Signup2Activity.this, ProfileActivity.class);
+                                intent.putExtra("Name", name);
+                                intent.putExtra("Phone", number);
+                                /*Log.i("datanow", name + number);
+                                usr = new users(name, number, 0, 0);
+                                mDatabaseReference.child("users").child(currentUser.getUid()).setValue(usr);*/
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
                         } else {
                             Toast.makeText(Signup2Activity.this,  task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
