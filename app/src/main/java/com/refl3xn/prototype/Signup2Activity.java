@@ -28,7 +28,7 @@ import static com.refl3xn.prototype.MainActivity.mAuth;
 public class Signup2Activity extends AppCompatActivity {
 
     EditText otpEditText;
-    String verificationid,name;
+    String verificationid, name, number;
     ProgressBar progressBar;
 
     @Override
@@ -38,7 +38,7 @@ public class Signup2Activity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         name = getIntent().getStringExtra("name");
-        String number = getIntent().getStringExtra("phonenumber");
+        number = getIntent().getStringExtra("phonenumber");
         String phonenumber = "+91" + number;
         sendVerificationCode(phonenumber);
 
@@ -74,11 +74,13 @@ public class Signup2Activity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Intent intent = new Intent(Signup2Activity.this, ProfileActivity.class);
+                            intent.putExtra("name", name);
+                            intent.putExtra("phone", number);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
                         } else {
-                            Toast.makeText(Signup2Activity.this, "siwc" + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(Signup2Activity.this,  task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
 
@@ -116,7 +118,7 @@ public class Signup2Activity extends AppCompatActivity {
 
         @Override
         public void onVerificationFailed(FirebaseException e) {
-            Toast.makeText(Signup2Activity.this, "siwc2" + e.getMessage(),Toast.LENGTH_LONG).show();
+            Toast.makeText(Signup2Activity.this, e.getMessage(),Toast.LENGTH_LONG).show();
 
         }
     };

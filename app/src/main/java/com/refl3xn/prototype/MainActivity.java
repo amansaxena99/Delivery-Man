@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     public static FirebaseUser currentUser;
     public static FirebaseAuth mAuth;
     public static FirebaseDatabase mFirebaseDatabase;
-    public static DatabaseReference mDatabaseReference, mDatabaseReferencewide;
+    public static DatabaseReference mDatabaseReference;
     public static String mUsername="0";
 
     ConstraintLayout layout;
@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
             startActivity(intent);
             finish();
-            Toast.makeText(this, currentUser.getUid(), Toast.LENGTH_SHORT).show();
         }
     }
 }
