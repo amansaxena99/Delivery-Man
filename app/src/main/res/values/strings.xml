@@ -20,4 +20,5 @@
     <string name="title_activity_location">Map</string>
     <string name="title_activity_delivery_maps">Map</string>
     <string name="title_activity_delivery_look">Map</string>
+    <string name="title_activity_item_maps">Map</string>
 </resources>

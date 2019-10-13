@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -67,6 +68,7 @@ public class DeliveryLookActivity extends FragmentActivity implements OnMapReady
 
 
 
+    LatLng pic, del, usrll;
 
     /**
      * Manipulates the map once available.
@@ -81,14 +83,47 @@ public class DeliveryLookActivity extends FragmentActivity implements OnMapReady
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        LatLng pic = new LatLng(ProfileActivity.it.getpLat(), ProfileActivity.it.getpLng());
-        LatLng del = new LatLng(ProfileActivity.it.getdLat(), ProfileActivity.it.getdLng());
-        LatLng usrll = new LatLng(usr.getLatitue(), usr.getLongitude());
+        pic = new LatLng(ProfileActivity.it.getpLat(), ProfileActivity.it.getpLng());
+        del = new LatLng(ProfileActivity.it.getdLat(), ProfileActivity.it.getdLng());
+        usrll = new LatLng(usr.getLatitue(), usr.getLongitude());
         // Add a marker in Sydney and move the camera
         mMap.addMarker(new MarkerOptions().position(pic).title(ProfileActivity.it.getItem() + ": Rs." + ProfileActivity.it.getItemCost()).snippet(ProfileActivity.it.getPickupAddress() + " payment: Rs." + ProfileActivity.it.getDeliveryCost()));
-        mMap.addMarker(new MarkerOptions().position(new LatLng(ProfileActivity.it.dLat, ProfileActivity.it.getdLng())).title("to deliver here").snippet(ProfileActivity.it.getDeliveryAddress()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        mMap.addMarker(new MarkerOptions().position(del).title("to deliver here").snippet(ProfileActivity.it.getDeliveryAddress()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         mMap.addMarker(new MarkerOptions().position(usrll).title("you are here").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
 
+
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    for (DataSnapshot temp : dataSnapshot.child("users").getChildren()) {
+                        Log.i("data:",temp.getValue().toString());
+                        Log.i("data:", temp.getKey());
+                        if (temp.getKey().equals(FirebaseAuth.getInstance().getUid())) {
+                            usr = temp.getValue(users.class);
+                            Log.i("data::::", "changed");
+                            updateLocations();
+                        }
+                    }
+                } catch (Exception execp) {
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // ...
+            }
+        });
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(usrll, 13));
+    }
+
+    private void updateLocations() {
+        mMap.clear();
+        usrll = new LatLng(usr.getLatitue(), usr.getLongitude());
+        mMap.addMarker(new MarkerOptions().position(pic).title(ProfileActivity.it.getItem() + ": Rs." + ProfileActivity.it.getItemCost()).snippet(ProfileActivity.it.getPickupAddress() + " payment: Rs." + ProfileActivity.it.getDeliveryCost()));
+        mMap.addMarker(new MarkerOptions().position(del).title("to deliver here").snippet(ProfileActivity.it.getDeliveryAddress()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        mMap.addMarker(new MarkerOptions().position(usrll).title("you are here").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(usrll, 13));
     }
 }

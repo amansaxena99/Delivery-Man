@@ -35,7 +35,8 @@ public class ActiveListingActivity extends AppCompatActivity {
         if (!textView.getText().equals("No listings") && it.getDuid().equals("na")){
             Toast.makeText(this, "no one has accepted delivery yet", Toast.LENGTH_SHORT).show();
         } else {
-
+            Intent intent = new Intent(getApplicationContext(), ItemMapsActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -65,7 +66,7 @@ public class ActiveListingActivity extends AppCompatActivity {
 
     TextView textView;
     ProgressBar progressBar;
-    Item it;
+    public static Item it;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

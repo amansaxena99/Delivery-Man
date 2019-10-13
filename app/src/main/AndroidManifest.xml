@@ -32,8 +32,11 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".ItemMapsActivity"
+            android:label="@string/title_activity_item_maps"></activity>
+        <activity
             android:name=".DeliveryLookActivity"
-            android:label="@string/title_activity_delivery_look"></activity>
+            android:label="@string/title_activity_delivery_look" />
         <activity
             android:name=".DeliveryMapsActivity"
             android:label="@string/title_activity_delivery_maps" />
