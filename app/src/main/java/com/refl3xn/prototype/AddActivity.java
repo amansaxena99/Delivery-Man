@@ -25,6 +25,10 @@ public class AddActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void exit(View view){
+        finish();
+    }
+
     public void pickupLocation(View view){
         Intent intent = new Intent(getApplicationContext(), LocationActivity.class);
         intent.putExtra("type", "1");
@@ -32,7 +36,7 @@ public class AddActivity extends AppCompatActivity {
     }
 
     public void addFunction(View view){
-        if (itemEditText == null || deliveryCostEditText == null || deliveryAddressEditText == null || itemcostEditText == null || pickupAddressEditText == null){
+        if (itemEditText == null || deliveryCostEditText == null || deliveryAddressEditText == null || itemcostEditText == null || pickupAddressEditText == null || item.getdLng() == null || item.getdLat() == null || item.getpLng() == null || item.getpLat() == null){
             Toast.makeText(this, "enter all details", Toast.LENGTH_SHORT).show();
         } else {
             item.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid().toString());
@@ -44,8 +48,6 @@ public class AddActivity extends AppCompatActivity {
             item.setDuid("na");
             item.setStatus(0);
             mDatabaseReference.child("listing").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(item);
-            Intent intent = new Intent(getApplicationContext(), ActiveListingActivity.class);
-            startActivity(intent);
             finish();
         }
     }

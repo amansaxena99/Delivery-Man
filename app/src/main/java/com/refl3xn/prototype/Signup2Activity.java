@@ -36,6 +36,7 @@ public class Signup2Activity extends AppCompatActivity {
     EditText otpEditText;
     String verificationid, name, number;
     ProgressBar progressBar;
+    int type = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,10 @@ public class Signup2Activity extends AppCompatActivity {
         name = getIntent().getStringExtra("name");
         number = getIntent().getStringExtra("phonenumber");
         String phonenumber = "+91" + number;
+        Log.i("datanow", name + number);
+        type = getIntent().getIntExtra("type", 0);
+        Log.i("datanow", String.valueOf(type));
+
         sendVerificationCode(phonenumber);
 
         progressBar = findViewById(R.id.progressbar);
@@ -79,15 +84,16 @@ public class Signup2Activity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                                Intent intent = new Intent(Signup2Activity.this, ProfileActivity.class);
-                                intent.putExtra("Name", name);
-                                intent.putExtra("Phone", number);
-                                /*Log.i("datanow", name + number);
+                            if (type == 1){
+                                Log.i("datanow", name + number);
                                 usr = new users(name, number, 0, 0);
-                                mDatabaseReference.child("users").child(currentUser.getUid()).setValue(usr);*/
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                                finish();
+                                mDatabaseReference.child("users").child(FirebaseAuth.getInstance().getUid()).setValue(usr);
+
+                            } else {
+                            }
+                            Intent intent = new Intent(Signup2Activity.this, ProfileActivity.class);
+                            startActivity(intent);
+                            finish();
                         } else {
                             Toast.makeText(Signup2Activity.this,  task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }

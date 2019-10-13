@@ -25,48 +25,63 @@ public class ActiveListingActivity extends AppCompatActivity {
         if (textView.getText().equals("No listings")){
             Intent intent = new Intent(getApplicationContext(), AddActivity.class);
             startActivity(intent);
-            finish();
         } else {
             Toast.makeText(this, "listings limited to one", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void viewStat(View view){
-        if (!textView.getText().equals("No listings") && it.getDuid().equals("na")){
-            Toast.makeText(this, "no one has accepted delivery yet", Toast.LENGTH_SHORT).show();
+        if (canflag == 0){
+            Toast.makeText(this, "no listing", Toast.LENGTH_SHORT).show();
+            return;
         } else {
-            Intent intent = new Intent(getApplicationContext(), ItemMapsActivity.class);
-            startActivity(intent);
+            if (!textView.getText().equals("No listings") && it.getDuid().equals("na")) {
+                Toast.makeText(this, "no one has accepted delivery yet", Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(getApplicationContext(), ItemMapsActivity.class);
+                startActivity(intent);
+            }
         }
     }
 
+    public void exit(View view){
+        finish();
+    }
+
     public void cancelOrder(View view){
-        if (it.getStatus() == 0){
-            Toast.makeText(this, "canceled", Toast.LENGTH_SHORT).show();
-            mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    for (DataSnapshot temp: dataSnapshot.child("listing").getChildren()) {
-                        if (temp.getKey().equals(FirebaseAuth.getInstance().getUid())) {
-                            temp.getRef().removeValue();
-                            textView.setText("No listings");
+        if (canflag == 0){
+            Toast.makeText(this, "no listing", Toast.LENGTH_SHORT).show();
+            return;
+        } else {
+            if (it.getStatus() == 0) {
+                canflag = 0;
+                Toast.makeText(this, "canceled", Toast.LENGTH_SHORT).show();
+                mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot temp : dataSnapshot.child("listing").getChildren()) {
+                            if (temp.getKey().equals(FirebaseAuth.getInstance().getUid())) {
+                                temp.getRef().removeValue();
+                                textView.setText("No listings");
+                            }
                         }
                     }
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                }
-            });
-        } else {
-            Toast.makeText(this, "cancellation period is over now ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                Toast.makeText(this, "cancellation period is over now ", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     TextView textView;
     ProgressBar progressBar;
     public static Item it;
+    int canflag = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +108,7 @@ public class ActiveListingActivity extends AppCompatActivity {
                         if (temp.getKey().equals(FirebaseAuth.getInstance().getUid())) {
                             it = temp.getValue(Item.class);
                             flag = 1;
+                            canflag = 1;
                             textView.setText(it.getItem() + "\nfrom: " + it.getPickupAddress() + "\nfor: Rs" + it.getDeliveryCost() + "\nStatus: " + it.getStatus());
                         }
                     }

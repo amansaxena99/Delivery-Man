@@ -20,6 +20,7 @@ public class LoginActivity extends AppCompatActivity {
         if (mobileEditText.getText().toString().length() == 10) {
             Intent intent = new Intent(getApplicationContext(), Signup2Activity.class);
             intent.putExtra("phonenumber", mobileEditText.getText().toString());
+            intent.putExtra("type", 2);
             startActivity(intent);
             finish();
         } else {

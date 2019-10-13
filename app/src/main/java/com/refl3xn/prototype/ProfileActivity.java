@@ -115,7 +115,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.bringToFront();
-        progressBar.getIndeterminateDrawable().setColorFilter(0xFFFF0000, android.graphics.PorterDuff.Mode.MULTIPLY);
+//        progressBar.getIndeterminateDrawable().setColorFilter(0xFFFF0000, android.graphics.PorterDuff.Mode.MULTIPLY);
         progressBar.setVisibility(View.VISIBLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
@@ -163,7 +163,7 @@ public class ProfileActivity extends AppCompatActivity {
         it = new Item();
         name = getIntent().getStringExtra("Name");
         phone = getIntent().getStringExtra("Phone");
-        Toast.makeText(this, name + phone, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, name + phone, Toast.LENGTH_SHORT).show();
 //        usr = new users();
 
         if (name == null) {
@@ -184,10 +184,6 @@ public class ProfileActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.INVISIBLE);
                     } catch (Exception execp) {
                         Toast.makeText(ProfileActivity.this, "please Register before login", Toast.LENGTH_SHORT).show();
-//                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-
-//                        startActivity(intent);
-//                        finish();
                     }
                 }
 
@@ -214,10 +210,6 @@ public class ProfileActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.INVISIBLE);
                     } catch (Exception execp) {
                         Toast.makeText(ProfileActivity.this, "please Register before login", Toast.LENGTH_SHORT).show();
-//                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-
-//                        startActivity(intent);
-//                        finish();
                     }
                 }
 

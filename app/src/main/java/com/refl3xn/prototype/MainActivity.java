@@ -83,10 +83,6 @@ public class MainActivity extends AppCompatActivity {
 
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mDatabaseReference = mFirebaseDatabase.getReference();
-        /*Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();*/
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
 //            finish();

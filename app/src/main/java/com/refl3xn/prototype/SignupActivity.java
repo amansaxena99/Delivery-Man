@@ -32,6 +32,7 @@ public class SignupActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), Signup2Activity.class);
             intent.putExtra("name", nameEditText.getText().toString());
             intent.putExtra("phonenumber", mobileEditText.getText().toString());
+            intent.putExtra("type", 1);
             startActivity(intent);
             finish();
         } else {
