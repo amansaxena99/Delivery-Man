@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,15 +30,29 @@ public class DeliveryLookActivity extends FragmentActivity implements OnMapReady
 
     private GoogleMap mMap;
     TextView textView;
+    Button button;
 
     public void completeFunction(View view){
-        if (ProfileActivity.it.getStatus() == 2){
-            Toast.makeText(this, "order marked delivered already", Toast.LENGTH_SHORT).show();
+        if (ProfileActivity.it.getStatus() == 1){
+            button.setText("delivered");
+            ProfileActivity.it.setStatus(2);
+            mDatabaseReference.child("listing").child(ProfileActivity.it.getUid()).setValue(ProfileActivity.it);
+            Toast.makeText(this, "order picked", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (ProfileActivity.it.getStatus() == 2){
+            ProfileActivity.it.setStatus(3);
+            mDatabaseReference.child("listing").child(ProfileActivity.it.getUid()).setValue(ProfileActivity.it);
+            Toast.makeText(this, "Delivered", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+            finishAffinity();
+            startActivity(intent);
+            finish();
+            return;
+        } else if (ProfileActivity.it.getStatus() == 3){
+            Toast.makeText(this, "order not confirmed delivered from customer side", Toast.LENGTH_SHORT).show();
             return;
         }
-        ProfileActivity.it.setStatus(2);
-        mDatabaseReference.child("listing").child(ProfileActivity.it.getUid()).setValue(ProfileActivity.it);
-        Toast.makeText(this, "Delivered", Toast.LENGTH_SHORT).show();
+
         /*mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -54,10 +69,6 @@ public class DeliveryLookActivity extends FragmentActivity implements OnMapReady
 
             }
         });*/
-        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-        finishAffinity();
-        startActivity(intent);
-        finish();
     }
 
     @Override
@@ -68,8 +79,6 @@ public class DeliveryLookActivity extends FragmentActivity implements OnMapReady
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
     }
 
 
@@ -90,6 +99,7 @@ public class DeliveryLookActivity extends FragmentActivity implements OnMapReady
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         textView = findViewById(R.id.textView);
+        button = findViewById(R.id.button);
         pic = new LatLng(ProfileActivity.it.getpLat(), ProfileActivity.it.getpLng());
         del = new LatLng(ProfileActivity.it.getdLat(), ProfileActivity.it.getdLng());
         usrll = new LatLng(usr.getLatitue(), usr.getLongitude());
@@ -97,6 +107,14 @@ public class DeliveryLookActivity extends FragmentActivity implements OnMapReady
         mMap.addMarker(new MarkerOptions().position(pic).title(ProfileActivity.it.getItem() + ": Rs." + ProfileActivity.it.getItemCost()).snippet(ProfileActivity.it.getPickupAddress() + " payment: Rs." + ProfileActivity.it.getDeliveryCost()));
         mMap.addMarker(new MarkerOptions().position(del).title("to deliver here").snippet(ProfileActivity.it.getDeliveryAddress()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         mMap.addMarker(new MarkerOptions().position(usrll).title("you are here").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+
+        if (ProfileActivity.it.getStatus() == 1){
+            button.setText("picked");
+        } else if (ProfileActivity.it.getStatus() == 2){
+            button.setText("delivered");
+        } else if (ProfileActivity.it.getStatus() == 3){
+            button.setText("Completed");
+        }
 
 
         mDatabaseReference.addValueEventListener(new ValueEventListener() {
@@ -151,7 +169,7 @@ public class DeliveryLookActivity extends FragmentActivity implements OnMapReady
     private void updateLocations() {
         mMap.clear();
         usrll = new LatLng(usr.getLatitue(), usr.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(pic).title(ProfileActivity.it.getItem() + ": Rs." + ProfileActivity.it.getItemCost()).snippet(ProfileActivity.it.getPickupAddress() + " payment: Rs." + ProfileActivity.it.getDeliveryCost()));
+        mMap.addMarker(new MarkerOptions().position(pic).title(ProfileActivity.it.getItem() + ": Rs." + ProfileActivity.it.getItemCost()).snippet("payment: Rs." + ProfileActivity.it.getDeliveryCost()));
         mMap.addMarker(new MarkerOptions().position(del).title("to deliver here").snippet(ProfileActivity.it.getDeliveryAddress()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         mMap.addMarker(new MarkerOptions().position(usrll).title("you are here").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
 //        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(usrll, 13));

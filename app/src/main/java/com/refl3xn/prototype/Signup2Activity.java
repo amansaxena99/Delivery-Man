@@ -88,7 +88,6 @@ public class Signup2Activity extends AppCompatActivity {
                                 Log.i("datanow", name + number);
                                 usr = new users(name, number, 0, 0);
                                 mDatabaseReference.child("users").child(FirebaseAuth.getInstance().getUid()).setValue(usr);
-
                             } else {
                             }
                             Intent intent = new Intent(Signup2Activity.this, ProfileActivity.class);

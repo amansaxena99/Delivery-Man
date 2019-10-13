@@ -109,7 +109,15 @@ public class ActiveListingActivity extends AppCompatActivity {
                             it = temp.getValue(Item.class);
                             flag = 1;
                             canflag = 1;
-                            textView.setText(it.getItem() + "\nfrom: " + it.getPickupAddress() + "\nfor: Rs" + it.getDeliveryCost() + "\nStatus: " + it.getStatus());
+                            if (it.getStatus() == 1) {
+                                textView.setText(it.getItem() + "\nfrom: " + it.getPickupAddress() + "\nfor: Rs" + it.getDeliveryCost() + "\nStatus: confirmed");
+                            } else if (it.getStatus() == 2) {
+                                textView.setText(it.getItem() + "\nfrom: " + it.getPickupAddress() + "\nfor: Rs" + it.getDeliveryCost() + "\nStatus: picked");
+                            } else if (it.getStatus() == 3) {
+                                textView.setText(it.getItem() + "\nfrom: " + it.getPickupAddress() + "\nfor: Rs" + it.getDeliveryCost() + "\nStatus: delivered");
+                            } else {
+                                textView.setText(it.getItem() + "\nfrom: " + it.getPickupAddress() + "\nfor: Rs" + it.getDeliveryCost() + "\nStatus: active");
+                            }
                         }
                     }
                     if (flag == 0){

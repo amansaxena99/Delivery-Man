@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+
 import static com.refl3xn.prototype.MainActivity.mDatabaseReference;
 import static com.refl3xn.prototype.MainActivity.usr;
 import static com.refl3xn.prototype.ActiveListingActivity.it;
@@ -31,8 +32,8 @@ public class ItemMapsActivity extends FragmentActivity implements OnMapReadyCall
     private GoogleMap mMap;
 
     public void received(View view){
-        if (it.getStatus() == 2) {
-            it.setStatus(3);
+        if (it.getStatus() == 3) {
+            it.setStatus(4);
             mDatabaseReference.child("listing").child(it.getUid()).setValue(it);
             Toast.makeText(this, "received", Toast.LENGTH_SHORT).show();
             mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -92,6 +93,8 @@ public class ItemMapsActivity extends FragmentActivity implements OnMapReadyCall
         // Add a marker in Sydney and move the camera
         pic = new LatLng(it.getpLat(), it.getpLng());
         del = new LatLng(it.getdLat(), it.getdLng());
+        Double lat1 = pic.latitude, lat2 = del.latitude, lng1 = pic.longitude, lng2 = del.longitude;
+//        makePath(new LatLng(lat2, lng2), new LatLng(lat1, lng1));
         usrll = new LatLng(usr.getLatitue(), usr.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(usrll, 13));
         mMap.addMarker(new MarkerOptions().position(pic).title(it.getItem() + ": Rs." + it.getItemCost()).snippet(it.getPickupAddress() + " payment: Rs." + it.getDeliveryCost()));
@@ -126,8 +129,8 @@ public class ItemMapsActivity extends FragmentActivity implements OnMapReadyCall
     private void updateLocations() {
         mMap.clear();
         usrll = new LatLng(delu.getLatitue(), delu.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(pic).title(it.getItem() + ": Rs." + it.getItemCost()).snippet(it.getPickupAddress() + " payment: Rs." + it.getDeliveryCost()));
-        mMap.addMarker(new MarkerOptions().position(del).title("to deliver here").snippet(it.getDeliveryAddress()).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-        mMap.addMarker(new MarkerOptions().position(usrll).title("you are here").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+        mMap.addMarker(new MarkerOptions().position(pic).title(it.getItem() + ": Rs." + it.getItemCost()).snippet("payment: Rs." + it.getDeliveryCost()));
+        mMap.addMarker(new MarkerOptions().position(del).title(it.getDeliveryAddress()).snippet("").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+        mMap.addMarker(new MarkerOptions().position(usrll).title("traveler is here").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
     }
 }

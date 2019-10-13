@@ -151,10 +151,10 @@ public class ProfileActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         } else {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, locationListener);
-            Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            /*Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (lastKnownLocation != null){
-//                updateLocation(lastKnownLocation);
-            }
+                updateLocation(lastKnownLocation);
+            }*/
         }
 
     }
@@ -192,19 +192,25 @@ public class ProfileActivity extends AppCompatActivity {
                     // ...
                 }
             });
-            mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            mDatabaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     try {
+                        Boolean ddflag = false;
                         for (DataSnapshot temp : dataSnapshot.child("listing").getChildren()) {
                             Log.i("data:",temp.getValue().toString());
                             Log.i("data:", temp.getKey());
                             it = temp.getValue(Item.class);
-                            if (it.getDuid().equals(FirebaseAuth.getInstance().getUid()) && (it.getStatus() == 1 || it.getStatus() == 2)) {
+                            if (it.getDuid().equals(FirebaseAuth.getInstance().getUid()) && (it.getStatus() == 1 || it.getStatus() == 2 || it.getStatus() == 3)) {
                                 dflag = true;
-                                dtextView.setText("Delivering: " + it.getItem() + "\nAdd: " + it.getDeliveryAddress() + "\nform: " + it.getPickupAddress());
+                                ddflag = true;
+                                dtextView.setText("Delivering: " + it.getItem() + "\nAddress: " + it.getDeliveryAddress() + "\nform: " + it.getPickupAddress());
                                 break;
                             }
+                        }
+                        if (ddflag == false){
+                            dflag = false;
+                            dtextView.setText("Not delivering any thing\ncurrently");
                         }
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         progressBar.setVisibility(View.INVISIBLE);
