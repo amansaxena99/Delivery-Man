@@ -31,29 +31,32 @@ public class ItemMapsActivity extends FragmentActivity implements OnMapReadyCall
     private GoogleMap mMap;
 
     public void received(View view){
-        it.setStatus(3);
-        mDatabaseReference.child("listing").child(ProfileActivity.it.getUid()).setValue(ProfileActivity.it);
-        Toast.makeText(this, "received", Toast.LENGTH_SHORT).show();
-        mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot temp: dataSnapshot.child("listing").getChildren()) {
-                    Log.i("data::::", "this" + ProfileActivity.it.uid);
-                    if (temp.getKey().equals(ProfileActivity.it.getUid())) {
-                        temp.getRef().removeValue();
+        if (it.getStatus() == 2) {
+            it.setStatus(3);
+            mDatabaseReference.child("listing").child(it.getUid()).setValue(it);
+            Toast.makeText(this, "received", Toast.LENGTH_SHORT).show();
+            mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot temp : dataSnapshot.child("listing").getChildren()) {
+                        if (temp.getKey().equals(it.getUid())) {
+                            temp.getRef().removeValue();
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
-        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-        finishAffinity();
-        startActivity(intent);
-        finish();
+                }
+            });
+            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+            finishAffinity();
+            startActivity(intent);
+            finish();
+        } else {
+            Toast.makeText(this, "delivery not marked done from traveller end", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
