@@ -19,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,11 +40,14 @@ public class ProfileActivity extends AppCompatActivity {
     MenuInflater menuInflater;
     Menu menu1;
 
+    Boolean dflag;
+
+    public static Item it;
     ProgressBar progressBar;
 
     String name, phone;
 
-    TextView textView;
+    TextView textView, dtextView;
 
     public void editProfile(View view){
         Toast.makeText(this, "edit clicked", Toast.LENGTH_SHORT).show();
@@ -63,8 +65,14 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void deliveryListingView (View view){
-        Intent intent = new Intent(getApplicationContext(), DeliveryMapsActivity.class);
-        startActivity(intent);
+        if (dflag){
+            Toast.makeText(this, "making delivery", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), DeliveryLookActivity.class);
+            startActivity(intent);
+        } else {
+            Intent intent = new Intent(getApplicationContext(), DeliveryMapsActivity.class);
+            startActivity(intent);
+        }
     }
 
 
@@ -96,11 +104,13 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        dflag = false;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         textView = findViewById(R.id.textView);
+        dtextView = findViewById(R.id.textView4);
         phone = getIntent().getStringExtra("Phone");
 
         progressBar = findViewById(R.id.progressBar);
@@ -150,6 +160,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void datar() {
+        it = new Item();
         name = getIntent().getStringExtra("Name");
         phone = getIntent().getStringExtra("Phone");
         Toast.makeText(this, name + phone, Toast.LENGTH_SHORT).show();
@@ -167,6 +178,36 @@ public class ProfileActivity extends AppCompatActivity {
                                 usr = temp.getValue(users.class);
                                 Toast.makeText(ProfileActivity.this, "Welcome " + usr.getName(), Toast.LENGTH_SHORT).show();
                                 textView.setText(usr.name+"\n"+usr.phone);
+                            }
+                        }
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                        progressBar.setVisibility(View.INVISIBLE);
+                    } catch (Exception execp) {
+                        Toast.makeText(ProfileActivity.this, "please Register before login", Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+
+//                        startActivity(intent);
+//                        finish();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // ...
+                }
+            });
+            mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    try {
+                        for (DataSnapshot temp : dataSnapshot.child("listing").getChildren()) {
+                            Log.i("data:",temp.getValue().toString());
+                            Log.i("data:", temp.getKey());
+                            it = temp.getValue(Item.class);
+                            if (it.getDuid().equals(FirebaseAuth.getInstance().getUid()) && it.getStatus() == 1) {
+                                dflag = true;
+                                dtextView.setText("Delivering: " + it.getItem() + "\nAdd: " + it.getDeliveryAddress() + "\nform: " + it.getPickupAddress());
+                                break;
                             }
                         }
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);

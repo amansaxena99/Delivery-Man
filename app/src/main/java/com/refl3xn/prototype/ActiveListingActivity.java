@@ -85,13 +85,18 @@ public class ActiveListingActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 try {
+                    int flag = 0;
                     for (DataSnapshot temp : dataSnapshot.child("listing").getChildren()) {
                         Log.i("data:",temp.getValue().toString());
                         Log.i("data:", temp.getKey());
                         if (temp.getKey().equals(FirebaseAuth.getInstance().getUid())) {
                             it = temp.getValue(Item.class);
+                            flag = 1;
                             textView.setText(it.getItem() + "\nfrom: " + it.getPickupAddress() + "\nfor: Rs" + it.getDeliveryCost() + "\nStatus: " + it.getStatus());
                         }
+                    }
+                    if (flag == 0){
+                        textView.setText("No listings");
                     }
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     progressBar.setVisibility(View.INVISIBLE);
