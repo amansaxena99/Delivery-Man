@@ -32,9 +32,12 @@
             android:value="@string/google_maps_key" />
 
         <activity
+            android:name=".DeliveryMapsActivity"
+            android:label="@string/title_activity_delivery_maps"></activity>
+        <activity
             android:name=".LocationActivity"
             android:label="@string/title_activity_location"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity android:name=".AddActivity" />
         <activity android:name=".ActiveListingActivity" />
         <activity android:name=".NotificationActivity" />
@@ -50,7 +53,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
 
 </manifest>

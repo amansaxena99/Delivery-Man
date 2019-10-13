@@ -4,13 +4,14 @@ package com.refl3xn.prototype;
 public class Item {
     String item, itemCost, pickupAddress, deliveryAddress, deliveryCost;
     Double dLat, dLng, pLat, pLng;
+    Integer status;
     String uid, duid;
 
 
 
     public Item(){}
 
-    public Item(String item, String itemCost, String pickupAddress, String deliveryAddress, String deliveryCost, Double dLat, Double dLng, Double pLat, Double pLng, String uid, String duid) {
+    public Item(String item, String itemCost, String pickupAddress, String deliveryAddress, String deliveryCost, Double dLat, Double dLng, Double pLat, Double pLng, Integer status, String uid, String duid) {
         this.item = item;
         this.itemCost = itemCost;
         this.pickupAddress = pickupAddress;
@@ -20,24 +21,9 @@ public class Item {
         this.dLng = dLng;
         this.pLat = pLat;
         this.pLng = pLng;
+        this.status = status;
         this.uid = uid;
         this.duid = duid;
-    }
-
-    public String getDuid() {
-        return duid;
-    }
-
-    public void setDuid(String duid) {
-        this.duid = duid;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     public String getItem() {
@@ -110,5 +96,29 @@ public class Item {
 
     public void setpLng(Double pLng) {
         this.pLng = pLng;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public String getDuid() {
+        return duid;
+    }
+
+    public void setDuid(String duid) {
+        this.duid = duid;
     }
 }

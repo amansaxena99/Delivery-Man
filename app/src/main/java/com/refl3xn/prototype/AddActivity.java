@@ -42,6 +42,7 @@ public class AddActivity extends AppCompatActivity {
             item.setItemCost(itemcostEditText.getText().toString());
             item.setPickupAddress(pickupAddressEditText.getText().toString());
             item.setDuid("na");
+            item.setStatus(0);
             mDatabaseReference.child("listing").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(item);
             Intent intent = new Intent(getApplicationContext(), ActiveListingActivity.class);
             startActivity(intent);

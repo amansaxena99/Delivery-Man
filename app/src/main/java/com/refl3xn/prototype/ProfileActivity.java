@@ -63,7 +63,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void deliveryListingView (View view){
-        Intent intent = new Intent(getApplicationContext(), DeliveryListingActivity.class);
+        Intent intent = new Intent(getApplicationContext(), DeliveryMapsActivity.class);
         startActivity(intent);
     }
 
@@ -195,7 +195,6 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void updateLocation(Location location){
         currLocation = location;
-
         usr.setLatitue(currLocation.getLatitude());
         usr.setLongitude(currLocation.getLongitude());
         mDatabaseReference.child("users").child(currentUser.getUid()).setValue(usr);

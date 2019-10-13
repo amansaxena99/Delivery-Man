@@ -40,22 +40,27 @@ public class ActiveListingActivity extends AppCompatActivity {
     }
 
     public void cancelOrder(View view){
-        mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot temp: dataSnapshot.child("listing").getChildren()) {
-                    if (temp.getKey().equals(FirebaseAuth.getInstance().getUid())) {
-                        temp.getRef().removeValue();
-                        textView.setText("No listings");
+        if (it.getStatus() == 0){
+            Toast.makeText(this, "canceled", Toast.LENGTH_SHORT).show();
+            mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot temp: dataSnapshot.child("listing").getChildren()) {
+                        if (temp.getKey().equals(FirebaseAuth.getInstance().getUid())) {
+                            temp.getRef().removeValue();
+                            textView.setText("No listings");
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        } else {
+            Toast.makeText(this, "cancellation period is over now ", Toast.LENGTH_SHORT).show();
+        }
     }
 
     TextView textView;
@@ -76,7 +81,7 @@ public class ActiveListingActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-        mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 try {
@@ -85,16 +90,13 @@ public class ActiveListingActivity extends AppCompatActivity {
                         Log.i("data:", temp.getKey());
                         if (temp.getKey().equals(FirebaseAuth.getInstance().getUid())) {
                             it = temp.getValue(Item.class);
-                            textView.setText(it.getItem() + "\nfrom: " + it.getPickupAddress() + "\nfor: Rs" + it.getDeliveryCost());
+                            textView.setText(it.getItem() + "\nfrom: " + it.getPickupAddress() + "\nfor: Rs" + it.getDeliveryCost() + "\nStatus: " + it.getStatus());
                         }
                     }
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     progressBar.setVisibility(View.INVISIBLE);
                 } catch (Exception execp) {
-//                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 
-//                        startActivity(intent);
-//                        finish();
                 }
             }
 
