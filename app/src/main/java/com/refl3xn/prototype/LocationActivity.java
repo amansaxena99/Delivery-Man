@@ -65,10 +65,10 @@ public class LocationActivity extends FragmentActivity implements OnMapReadyCall
 
         // Add a marker in Sydney and move the camera
 
-        LatLng loc = new LatLng(usr.getLatitue(), usr.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(loc).title("here"));
+        location = new LatLng(usr.getLatitue(), usr.getLongitude());
+        mMap.addMarker(new MarkerOptions().position(location).title("here"));
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 13));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 13));
 
         type = getIntent().getStringExtra("type");
         mMap.setOnMapLongClickListener(this);

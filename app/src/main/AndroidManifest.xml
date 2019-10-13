@@ -47,7 +47,6 @@
         <activity android:name=".AddActivity" />
         <activity android:name=".ActiveListingActivity" />
         <activity android:name=".NotificationActivity" />
-        <activity android:name=".DeliveryListingActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".Signup2Activity" />
         <activity android:name=".SignupActivity" />
