@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,12 +28,17 @@ import static com.refl3xn.prototype.MainActivity.usr;
 public class DeliveryLookActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    TextView textView;
 
     public void completeFunction(View view){
+        if (ProfileActivity.it.getStatus() == 2){
+            Toast.makeText(this, "order marked delivered already", Toast.LENGTH_SHORT).show();
+            return;
+        }
         ProfileActivity.it.setStatus(2);
         mDatabaseReference.child("listing").child(ProfileActivity.it.getUid()).setValue(ProfileActivity.it);
         Toast.makeText(this, "Delivered", Toast.LENGTH_SHORT).show();
-        mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        /*mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot temp: dataSnapshot.child("listing").getChildren()) {
@@ -47,7 +53,7 @@ public class DeliveryLookActivity extends FragmentActivity implements OnMapReady
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        });*/
         Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
         finishAffinity();
         startActivity(intent);
@@ -69,6 +75,7 @@ public class DeliveryLookActivity extends FragmentActivity implements OnMapReady
 
 
     LatLng pic, del, usrll;
+    users tempuser;
 
     /**
      * Manipulates the map once available.
@@ -82,7 +89,7 @@ public class DeliveryLookActivity extends FragmentActivity implements OnMapReady
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        textView = findViewById(R.id.textView);
         pic = new LatLng(ProfileActivity.it.getpLat(), ProfileActivity.it.getpLng());
         del = new LatLng(ProfileActivity.it.getdLat(), ProfileActivity.it.getdLng());
         usrll = new LatLng(usr.getLatitue(), usr.getLongitude());
@@ -103,6 +110,29 @@ public class DeliveryLookActivity extends FragmentActivity implements OnMapReady
                             usr = temp.getValue(users.class);
                             Log.i("data::::", "changed");
                             updateLocations();
+                        }
+                    }
+                } catch (Exception execp) {
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // ...
+            }
+        });
+        mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                try {
+                    for (DataSnapshot temp : dataSnapshot.child("users").getChildren()) {
+                        Log.i("data:",temp.getValue().toString());
+                        Log.i("data:", temp.getKey());
+                        if (temp.getKey().equals(ProfileActivity.it.getUid())) {
+                            tempuser = temp.getValue(users.class);
+                            Log.i("data::::", "changed");
+                            textView.setText(tempuser.getName() + "\n" + tempuser.getPhone());
                         }
                     }
                 } catch (Exception execp) {

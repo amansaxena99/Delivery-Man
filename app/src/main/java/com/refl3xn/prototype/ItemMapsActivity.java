@@ -1,9 +1,14 @@
 package com.refl3xn.prototype;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,6 +30,31 @@ public class ItemMapsActivity extends FragmentActivity implements OnMapReadyCall
 
     private GoogleMap mMap;
 
+    public void received(View view){
+        it.setStatus(3);
+        mDatabaseReference.child("listing").child(ProfileActivity.it.getUid()).setValue(ProfileActivity.it);
+        Toast.makeText(this, "received", Toast.LENGTH_SHORT).show();
+        mDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot temp: dataSnapshot.child("listing").getChildren()) {
+                    Log.i("data::::", "this" + ProfileActivity.it.uid);
+                    if (temp.getKey().equals(ProfileActivity.it.getUid())) {
+                        temp.getRef().removeValue();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+        finishAffinity();
+        startActivity(intent);
+        finish();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +69,8 @@ public class ItemMapsActivity extends FragmentActivity implements OnMapReadyCall
     LatLng pic, del, usrll;
 
     users delu;
+    TextView textView;
+    Button button;
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -51,6 +83,8 @@ public class ItemMapsActivity extends FragmentActivity implements OnMapReadyCall
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        textView = findViewById(R.id.textView);
+        button = findViewById(R.id.button);
 
         // Add a marker in Sydney and move the camera
         pic = new LatLng(it.getpLat(), it.getpLng());
@@ -70,6 +104,7 @@ public class ItemMapsActivity extends FragmentActivity implements OnMapReadyCall
                         if (temp.getKey().equals(it.duid)) {
                             delu = temp.getValue(users.class);
                             Log.i("data::::", "changed");
+                            textView.setText(delu.getName() + "\n" + delu.getPhone());
                             updateLocations();
                         }
                     }

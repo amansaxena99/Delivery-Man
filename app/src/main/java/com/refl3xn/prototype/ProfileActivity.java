@@ -200,7 +200,7 @@ public class ProfileActivity extends AppCompatActivity {
                             Log.i("data:",temp.getValue().toString());
                             Log.i("data:", temp.getKey());
                             it = temp.getValue(Item.class);
-                            if (it.getDuid().equals(FirebaseAuth.getInstance().getUid()) && it.getStatus() == 1) {
+                            if (it.getDuid().equals(FirebaseAuth.getInstance().getUid()) && (it.getStatus() == 1 || it.getStatus() == 2)) {
                                 dflag = true;
                                 dtextView.setText("Delivering: " + it.getItem() + "\nAdd: " + it.getDeliveryAddress() + "\nform: " + it.getPickupAddress());
                                 break;
